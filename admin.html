@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vizinho Vende e Doa — Central de Controle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #0a0e17;
+  --bg2: #111827;
+  --bg3: #1a2236;
+  --pri: #2DB67D;
+  --pri2: #22956a;
+  --acc: #FF6B6B;
+  --warn: #FFB347;
+  --info: #4ECDC4;
+  --txt: #e8ecf4;
+  --txt2: #8892a8;
+  --brd: #1e293b;
+  --card: #151d2e;
+  --free: #2DB67D;
+  --sale: #FF6B6B;
+  --pet: #E91E63;
+  --wanted: #FF9800;
+  --food: #4CAF50;
+  --loja: #8B5CF6;
+  --pro: #FFD166;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; }
+
+/* LOGIN */
+.login-overlay {
+  position:fixed; inset:0; background:var(--bg); z-index:9999;
+  display:flex; align-items:center; justify-content:center;
+}
+.login-box {
+  background:var(--bg2); border:1px solid var(--brd); border-radius:20px;
+  padding:48px; width:380px; text-align:center;
+}
+.login-box h1 { font-size:28px; font-weight:800; margin-bottom:6px; }
+.login-box .sub { color:var(--txt2); font-size:14px; margin-bottom:32px; }
+.login-box input {
+  width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--brd);
+  background:var(--bg3); color:var(--txt); font-size:15px; margin-bottom:12px;
+  font-family:inherit; outline:none;
+}
+.login-box input:focus { border-color:var(--pri); }
+.login-box button {
+  width:100%; padding:14px; border-radius:12px; border:none;
+  background:var(--pri); color:#fff; font-size:16px; font-weight:700;
+  cursor:pointer; font-family:inherit;
+}
+.login-box button:hover { background:var(--pri2); }
+.login-box .error { color:var(--acc); font-size:13px; margin-top:8px; }
+.login-box .logo { font-size:48px; margin-bottom:16px; }
+
+/* LAYOUT */
+.app { display:flex; height:100vh; }
+.sidebar {
+  width:260px; background:var(--bg2); border-right:1px solid var(--brd);
+  display:flex; flex-direction:column; flex-shrink:0;
+}
+.sidebar-header { padding:24px 20px 16px; border-bottom:1px solid var(--brd); }
+.sidebar-header h2 { font-size:16px; font-weight:800; color:var(--pri); }
+.sidebar-header .sub { font-size:11px; color:var(--txt2); margin-top:2px; }
+.nav { flex:1; padding:12px 8px; }
+.nav-item {
+  display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px;
+  color:var(--txt2); font-size:14px; font-weight:500; cursor:pointer;
+  transition:all .15s;
+}
+.nav-item:hover { background:var(--bg3); color:var(--txt); }
+.nav-item.active { background:var(--pri); color:#fff; }
+.nav-item .icon { font-size:18px; width:24px; text-align:center; }
+.nav-item .badge {
+  margin-left:auto; background:var(--acc); color:#fff; font-size:10px;
+  font-weight:700; padding:2px 8px; border-radius:10px;
+}
+.sidebar-footer { padding:16px 20px; border-top:1px solid var(--brd); }
+.sidebar-footer .user { font-size:13px; color:var(--txt2); }
+.sidebar-footer button {
+  margin-top:8px; background:transparent; border:1px solid var(--brd);
+  color:var(--txt2); padding:6px 14px; border-radius:8px; cursor:pointer;
+  font-size:12px; font-family:inherit;
+}
+.sidebar-footer button:hover { border-color:var(--acc); color:var(--acc); }
+
+/* MAIN */
+.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+.topbar {
+  display:flex; align-items:center; gap:16px; padding:16px 24px;
+  border-bottom:1px solid var(--brd); background:var(--bg2);
+}
+.topbar h1 { font-size:20px; font-weight:700; }
+.topbar .filters { display:flex; gap:6px; margin-left:auto; }
+.filter-btn {
+  padding:6px 14px; border-radius:8px; border:1px solid var(--brd);
+  background:transparent; color:var(--txt2); font-size:12px; font-weight:600;
+  cursor:pointer; font-family:inherit; transition:all .15s;
+}
+.filter-btn:hover { border-color:var(--pri); color:var(--pri); }
+.filter-btn.active { background:var(--pri); border-color:var(--pri); color:#fff; }
+.content { flex:1; overflow:auto; }
+
+/* STATS */
+.stats-grid {
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr));
+  gap:12px; padding:20px 24px;
+}
+.stat-card {
+  background:var(--card); border:1px solid var(--brd); border-radius:14px;
+  padding:16px; position:relative; overflow:hidden;
+}
+.stat-card::after {
+  content:''; position:absolute; top:0; right:0; width:60px; height:60px;
+  border-radius:0 0 0 60px; opacity:.08;
+}
+.stat-card.green::after { background:var(--free); }
+.stat-card.red::after { background:var(--acc); }
+.stat-card.purple::after { background:var(--loja); }
+.stat-card.yellow::after { background:var(--warn); }
+.stat-card.blue::after { background:var(--info); }
+.stat-label { font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:.5px; font-weight:600; }
+.stat-value { font-size:28px; font-weight:800; margin-top:4px; }
+.stat-extra { font-size:11px; color:var(--txt2); margin-top:4px; }
+
+/* MAP */
+#map { width:100%; height:100%; min-height:400px; }
+.map-container { flex:1; position:relative; }
+.map-legend {
+  position:absolute; bottom:20px; left:20px; z-index:1000;
+  background:var(--bg2); border:1px solid var(--brd); border-radius:12px;
+  padding:12px 16px; display:flex; gap:14px;
+}
+.legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--txt2); }
+.legend-dot { width:10px; height:10px; border-radius:50%; }
+
+/* TABLE */
+.table-container { padding:0 24px 24px; }
+table { width:100%; border-collapse:collapse; }
+th {
+  text-align:left; padding:10px 14px; font-size:11px; text-transform:uppercase;
+  letter-spacing:.5px; color:var(--txt2); border-bottom:1px solid var(--brd);
+  font-weight:600; position:sticky; top:0; background:var(--bg);
+}
+td { padding:10px 14px; font-size:13px; border-bottom:1px solid var(--brd); }
+tr:hover { background:var(--bg3); }
+.badge {
+  display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px;
+  font-weight:700; text-transform:uppercase;
+}
+.badge-free { background:#2db67d22; color:var(--free); }
+.badge-sell { background:#ff6b6b22; color:var(--acc); }
+.badge-donate { background:#2db67d22; color:var(--free); }
+.badge-lost_pet { background:#e91e6322; color:var(--pet); }
+.badge-wanted { background:#ff980022; color:var(--wanted); }
+.badge-food { background:#4caf5022; color:var(--food); }
+.badge-loja { background:#8b5cf622; color:var(--loja); }
+.badge-pro { background:#ffd16622; color:var(--pro); }
+.badge-active { background:#2db67d22; color:var(--free); }
+.badge-blocked { background:#ff6b6b22; color:var(--acc); }
+.btn-sm {
+  padding:4px 10px; border-radius:6px; border:1px solid var(--brd);
+  background:transparent; color:var(--txt2); font-size:11px; cursor:pointer;
+  font-family:inherit; transition:all .15s;
+}
+.btn-sm:hover { border-color:var(--pri); color:var(--pri); }
+.btn-sm.danger:hover { border-color:var(--acc); color:var(--acc); }
+
+/* SEARCH */
+.search-bar {
+  padding:6px 14px; border-radius:8px; border:1px solid var(--brd);
+  background:var(--bg3); color:var(--txt); font-size:13px; width:220px;
+  font-family:inherit; outline:none;
+}
+.search-bar:focus { border-color:var(--pri); }
+
+/* LOADING */
+.loading { display:flex; align-items:center; justify-content:center; height:200px; color:var(--txt2); }
+.spinner { width:24px; height:24px; border:3px solid var(--brd); border-top-color:var(--pri); border-radius:50%; animation:spin .6s linear infinite; margin-right:10px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* RESPONSIVE */
+@media(max-width:768px) {
+  .sidebar { width:60px; }
+  .sidebar-header h2, .sidebar-header .sub, .nav-item span, .nav-item .badge, .sidebar-footer .user { display:none; }
+  .nav-item { justify-content:center; padding:12px; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="logo">🏘️</div>
+    <h1>Central de Controle</h1>
+    <p class="sub">Vizinho Vende e Doa — Admin</p>
+    <input type="email" id="loginEmail" placeholder="Email admin" autocomplete="email">
+    <input type="password" id="loginPass" placeholder="Senha" autocomplete="current-password">
+    <button onclick="doLogin()">Entrar</button>
+    <p class="error" id="loginError"></p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="display:none">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>🏘️ Vizinho Admin</h2>
+      <p class="sub">Central de Controle</p>
+    </div>
+    <div class="nav">
+      <div class="nav-item active" onclick="showPage('dashboard')"><span class="icon">📊</span><span>Dashboard</span></div>
+      <div class="nav-item" onclick="showPage('map')"><span class="icon">🗺️</span><span>Mapa</span></div>
+      <div class="nav-item" onclick="showPage('listings')"><span class="icon">📦</span><span>Anúncios</span></div>
+      <div class="nav-item" onclick="showPage('users')"><span class="icon">👥</span><span>Usuários</span></div>
+      <div class="nav-item" onclick="showPage('reports')"><span class="icon">⚠️</span><span>Denúncias</span><span class="badge" id="reportsBadge">0</span></div>
+      <div class="nav-item" onclick="showPage('pets')"><span class="icon">🐾</span><span>Pets</span></div>
+    </div>
+    <div class="sidebar-footer">
+      <p class="user" id="adminEmail"></p>
+      <button onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page">
+      <div class="topbar"><h1>📊 Dashboard</h1></div>
+      <div class="content">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="table-container">
+          <h3 style="margin-bottom:12px; font-size:15px; color:var(--txt2)">📝 Últimos anúncios</h3>
+          <table>
+            <thead><tr><th>Título</th><th>Tipo</th><th>Preço</th><th>Bairro</th><th>Data</th><th>Usuário</th></tr></thead>
+            <tbody id="recentListings"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div id="page-map" class="page" style="display:none">
+      <div class="topbar">
+        <h1>🗺️ Mapa</h1>
+        <div class="filters" id="mapFilters">
+          <button class="filter-btn active" data-filter="todos">Todos</button>
+          <button class="filter-btn" data-filter="gratis">🎁 Grátis</button>
+          <button class="filter-btn" data-filter="venda">💰 Venda</button>
+          <button class="filter-btn" data-filter="perdidos">🐾 Pets</button>
+          <button class="filter-btn" data-filter="procuro">🔎 Procuro</button>
+          <button class="filter-btn" data-filter="food">🍽️ Comida</button>
+        </div>
+        <span id="mapCount" style="font-size:12px; color:var(--txt2)"></span>
+      </div>
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--sale)"></div>Venda</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--free)"></div>Doação</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--wanted)"></div>Procuro</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--pet)"></div>Pet</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--food)"></div>Comida</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTINGS -->
+    <div id="page-listings" class="page" style="display:none">
+      <div class="topbar">
+        <h1>📦 Anúncios</h1>
+        <input class="search-bar" placeholder="🔍 Buscar anúncio..." oninput="filterListings(this.value)">
+        <div class="filters" id="listingFilters">
+          <button class="filter-btn active" data-filter="todos">Todos</button>
+          <button class="filter-btn" data-filter="gratis">Grátis</button>
+          <button class="filter-btn" data-filter="venda">Venda</button>
+          <button class="filter-btn" data-filter="perdidos">Pets</button>
+          <button class="filter-btn" data-filter="procuro">Procuro</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Foto</th><th>Título</th><th>Tipo</th><th>Preço</th><th>Categoria</th><th>Bairro</th><th>Data</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="listingsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div id="page-users" class="page" style="display:none">
+      <div class="topbar">
+        <h1>👥 Usuários</h1>
+        <input class="search-bar" placeholder="🔍 Buscar usuário..." oninput="filterUsers(this.value)">
+      </div>
+      <div class="content">
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Nome</th><th>Phone</th><th>Plano</th><th>Anúncios</th><th>Bairro</th><th>Cadastro</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="page-reports" class="page" style="display:none">
+      <div class="topbar"><h1>⚠️ Denúncias</h1></div>
+      <div class="content">
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Anúncio</th><th>Motivo</th><th>Reportado por</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody id="reportsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PETS -->
+    <div id="page-pets" class="page" style="display:none">
+      <div class="topbar"><h1>🐾 Pets Perdidos</h1></div>
+      <div class="content">
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Foto</th><th>Título</th><th>Descrição</th><th>Bairro</th><th>Data</th><th>Contato</th><th>Ações</th></tr></thead>
+            <tbody id="petsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE
+// ============================================================
+const SUPABASE_URL = 'https://qdhunieocngxaujmgumn.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkaHVuaWVvY25neGF1am1ndW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NzQzNzMsImV4cCI6MjA4NzM1MDM3M30.9pE4kkyC22VBljy1IDIKBVYZKWQYtGzqsRUK1FM5JLY';
+const ADMIN_EMAILS = ['gmenquini@gmail.com', 'fithyp@gmail.com'];
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let allListings = [];
+let allUsers = [];
+let allReports = [];
+let map = null;
+let markers = [];
+let currentFilter = 'todos';
+
+// ============================================================
+// AUTH
+// ============================================================
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+
+  if (!email || !pass) { errEl.textContent = 'Preencha email e senha'; return; }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) { errEl.textContent = error.message; return; }
+
+  if (!ADMIN_EMAILS.includes(email.toLowerCase())) {
+    errEl.textContent = 'Acesso negado — apenas admins';
+    await sb.auth.signOut();
+    return;
+  }
+
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('adminEmail').textContent = email;
+  loadAll();
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+  location.reload();
+}
+
+// Check existing session
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session && ADMIN_EMAILS.includes(session.user.email)) {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    document.getElementById('adminEmail').textContent = session.user.email;
+    loadAll();
+  }
+})();
+
+// Enter key on login
+document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ============================================================
+// DATA LOADING
+// ============================================================
+async function loadAll() {
+  await Promise.all([loadListings(), loadUsers(), loadReports()]);
+  renderDashboard();
+  renderMap();
+  renderListings();
+  renderUsers();
+  renderReports();
+  renderPets();
+}
+
+async function loadListings() {
+  const { data } = await sb.from('listings').select('*').order('created_at', { ascending: false });
+  allListings = data || [];
+}
+
+async function loadUsers() {
+  const { data } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
+  allUsers = data || [];
+}
+
+async function loadReports() {
+  const { data } = await sb.from('reports').select('*').order('created_at', { ascending: false });
+  allReports = data || [];
+  document.getElementById('reportsBadge').textContent = (data || []).length;
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function timeAgo(d) {
+  if (!d) return '-';
+  const s = (Date.now() - new Date(d)) / 1000;
+  if (s < 60) return 'agora';
+  if (s < 3600) return Math.floor(s/60) + 'min';
+  if (s < 86400) return Math.floor(s/3600) + 'h';
+  return Math.floor(s/86400) + 'd';
+}
+
+function formatPhone(raw) {
+  if (!raw) return '-';
+  const d = String(raw).replace(/\D/g, '');
+  if (d.length === 13) return '+' + d.slice(0,2) + ' (' + d.slice(2,4) + ') ' + d.slice(4,9) + '-' + d.slice(9);
+  if (d.length === 11) return '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
+  return d;
+}
+
+function typeColor(type) {
+  const colors = { sell:'var(--sale)', donate:'var(--free)', lost_pet:'var(--pet)', wanted:'var(--wanted)', food:'var(--food)' };
+  return colors[type] || 'var(--txt2)';
+}
+
+function typeName(type) {
+  const names = { sell:'Venda', donate:'Doação', lost_pet:'Pet Perdido', wanted:'Procuro', food:'Comida' };
+  return names[type] || type;
+}
+
+function planBadge(plan) {
+  if (plan === 'loja') return '<span class="badge badge-loja">LOJA</span>';
+  if (plan === 'pro') return '<span class="badge badge-pro">PRO</span>';
+  return '<span class="badge badge-free">FREE</span>';
+}
+
+function getUserName(userId) {
+  const u = allUsers.find(u => u.id === userId);
+  return u ? (u.name || u.phone || 'Anônimo') : 'Desconhecido';
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.getElementById('page-' + page).style.display = '';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  if (page === 'map') setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  const active = allListings.filter(l => l.status === 'active');
+  const sells = active.filter(l => l.type === 'sell');
+  const donates = active.filter(l => l.type === 'donate');
+  const pets = active.filter(l => l.type === 'lost_pet');
+  const proUsers = allUsers.filter(u => u.plan === 'pro').length;
+  const lojaUsers = allUsers.filter(u => u.plan === 'loja').length;
+
+  // Revenue estimate
+  const revenue = (proUsers * 4.90 + lojaUsers * 29.90).toFixed(2);
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card green"><div class="stat-label">Anúncios ativos</div><div class="stat-value">${active.length}</div><div class="stat-extra">${allListings.length} total</div></div>
+    <div class="stat-card blue"><div class="stat-label">Usuários</div><div class="stat-value">${allUsers.length}</div><div class="stat-extra">${proUsers} Pro · ${lojaUsers} Loja</div></div>
+    <div class="stat-card red"><div class="stat-label">Vendas</div><div class="stat-value">${sells.length}</div><div class="stat-extra">${donates.length} doações</div></div>
+    <div class="stat-card purple"><div class="stat-label">Receita mensal</div><div class="stat-value">R$ ${revenue}</div><div class="stat-extra">${proUsers + lojaUsers} assinantes</div></div>
+    <div class="stat-card yellow"><div class="stat-label">Denúncias</div><div class="stat-value">${allReports.length}</div><div class="stat-extra">pendentes</div></div>
+    <div class="stat-card blue"><div class="stat-label">Pets perdidos</div><div class="stat-value">${pets.length}</div><div class="stat-extra">ativos</div></div>
+  `;
+
+  // Recent listings
+  const recent = allListings.slice(0, 10);
+  document.getElementById('recentListings').innerHTML = recent.map(l => `
+    <tr>
+      <td style="font-weight:600">${l.title}</td>
+      <td><span class="badge badge-${l.type}">${typeName(l.type)}</span></td>
+      <td>${l.price > 0 ? 'R$ ' + l.price : 'Grátis'}</td>
+      <td style="color:var(--txt2)">${l.neighborhood || '-'}</td>
+      <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
+      <td style="color:var(--txt2)">${getUserName(l.user_id)}</td>
+    </tr>
+  `).join('');
+}
+
+// ============================================================
+// MAP
+// ============================================================
+function renderMap() {
+  if (!map) {
+    map = L.map('map', { zoomControl: true }).setView([-23.56, -46.66], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+  }
+
+  // Filter buttons
+  document.querySelectorAll('#mapFilters .filter-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#mapFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.filter;
+      updateMapMarkers();
+    };
+  });
+
+  updateMapMarkers();
+}
+
+function updateMapMarkers() {
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  let items = allListings.filter(l => l.status === 'active' && l.latitude && l.longitude);
+
+  if (currentFilter === 'gratis') items = items.filter(l => l.price === 0 && l.type !== 'wanted' && l.type !== 'lost_pet');
+  else if (currentFilter === 'venda') items = items.filter(l => l.price > 0 && l.type !== 'wanted');
+  else if (currentFilter === 'perdidos') items = items.filter(l => l.type === 'lost_pet');
+  else if (currentFilter === 'procuro') items = items.filter(l => l.type === 'wanted');
+  else if (currentFilter === 'food') items = items.filter(l => l.type === 'food');
+
+  document.getElementById('mapCount').textContent = items.length + ' anúncio' + (items.length !== 1 ? 's' : '');
+
+  items.forEach(l => {
+    const color = l.type === 'lost_pet' ? '#E91E63' : l.type === 'wanted' ? '#FF9800' : l.type === 'food' ? '#4CAF50' : l.price === 0 ? '#2DB67D' : '#FF6B6B';
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="background:${color};width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+    });
+
+    const photo = l.photos && l.photos.length > 0 ? `<img src="${l.photos[0]}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px">` : '';
+    const price = l.price > 0 ? 'R$ ' + l.price : l.type === 'lost_pet' ? '🐾 Pet Perdido' : 'Grátis';
+
+    const popup = `
+      <div style="font-family:DM Sans,sans-serif;min-width:160px;">
+        ${photo}
+        <strong style="font-size:13px">${l.title}</strong><br>
+        <span style="color:${color};font-weight:700;font-size:12px">${price}</span><br>
+        <span style="color:#888;font-size:11px">📍 ${l.neighborhood || 'Próximo'} · ${timeAgo(l.created_at)}</span><br>
+        <span style="color:#888;font-size:11px">👤 ${getUserName(l.user_id)}</span>
+      </div>
+    `;
+
+    const m = L.marker([Number(l.latitude), Number(l.longitude)], { icon }).addTo(map).bindPopup(popup);
+    markers.push(m);
+  });
+
+  // Fit bounds
+  if (markers.length > 0) {
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.1));
+  }
+}
+
+// ============================================================
+// LISTINGS TABLE
+// ============================================================
+let listingSearch = '';
+let listingFilter = 'todos';
+
+function renderListings() {
+  document.querySelectorAll('#listingFilters .filter-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#listingFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      listingFilter = btn.dataset.filter;
+      renderListingsTable();
+    };
+  });
+  renderListingsTable();
+}
+
+function filterListings(val) { listingSearch = val.toLowerCase(); renderListingsTable(); }
+
+function renderListingsTable() {
+  let items = allListings;
+  if (listingFilter === 'gratis') items = items.filter(l => l.price === 0 && l.type !== 'wanted' && l.type !== 'lost_pet');
+  else if (listingFilter === 'venda') items = items.filter(l => l.price > 0);
+  else if (listingFilter === 'perdidos') items = items.filter(l => l.type === 'lost_pet');
+  else if (listingFilter === 'procuro') items = items.filter(l => l.type === 'wanted');
+  if (listingSearch) items = items.filter(l => l.title.toLowerCase().includes(listingSearch) || (l.description||'').toLowerCase().includes(listingSearch));
+
+  document.getElementById('listingsTable').innerHTML = items.map(l => {
+    const photo = l.photos && l.photos.length > 0
+      ? `<img src="${l.photos[0]}" style="width:40px;height:40px;border-radius:8px;object-fit:cover">`
+      : '<div style="width:40px;height:40px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center">📦</div>';
+    return `<tr>
+      <td>${photo}</td>
+      <td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.title}</td>
+      <td><span class="badge badge-${l.type}">${typeName(l.type)}</span></td>
+      <td>${l.price > 0 ? 'R$ ' + l.price : '-'}</td>
+      <td style="color:var(--txt2)">${l.category || '-'}</td>
+      <td style="color:var(--txt2)">${l.neighborhood || '-'}</td>
+      <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
+      <td><span class="badge badge-${l.status}">${l.status}</span></td>
+      <td>
+        <button class="btn-sm danger" onclick="removeListing('${l.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function removeListing(id) {
+  if (!confirm('Remover este anúncio?')) return;
+  await sb.from('listings').update({ status: 'blocked' }).eq('id', id);
+  await loadListings();
+  renderListings();
+  renderDashboard();
+  renderMap();
+}
+
+// ============================================================
+// USERS TABLE
+// ============================================================
+let userSearch = '';
+function filterUsers(val) { userSearch = val.toLowerCase(); renderUsersTable(); }
+
+function renderUsers() { renderUsersTable(); }
+
+function renderUsersTable() {
+  let users = allUsers;
+  if (userSearch) users = users.filter(u => (u.name||'').toLowerCase().includes(userSearch) || (u.phone||'').includes(userSearch));
+
+  document.getElementById('usersTable').innerHTML = users.map(u => {
+    const adCount = allListings.filter(l => l.user_id === u.id && l.status === 'active').length;
+    return `<tr>
+      <td style="font-weight:600">${u.name || '<span style="color:var(--txt2)">Sem nome</span>'}</td>
+      <td>${formatPhone(u.phone)}</td>
+      <td>${planBadge(u.plan || 'free')}</td>
+      <td>${adCount}</td>
+      <td style="color:var(--txt2)">${u.neighborhood || '-'}</td>
+      <td style="color:var(--txt2)">${timeAgo(u.created_at)}</td>
+      <td><span class="badge badge-${u.status || 'active'}">${u.status || 'active'}</span></td>
+      <td>
+        <button class="btn-sm" onclick="changePlan('${u.id}', 'pro')">⭐ Pro</button>
+        <button class="btn-sm" onclick="changePlan('${u.id}', 'loja')">🏪 Loja</button>
+        <button class="btn-sm" onclick="changePlan('${u.id}', 'free')">Free</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function changePlan(userId, plan) {
+  await sb.from('profiles').update({ plan }).eq('id', userId);
+  await loadUsers();
+  renderUsers();
+  renderDashboard();
+}
+
+// ============================================================
+// REPORTS TABLE
+// ============================================================
+function renderReports() {
+  document.getElementById('reportsTable').innerHTML = allReports.map(r => {
+    const listing = allListings.find(l => l.id === r.target_id);
+    return `<tr>
+      <td style="font-weight:600">${listing ? listing.title : r.target_id.slice(0,8) + '...'}</td>
+      <td><span class="badge">${r.reason}</span></td>
+      <td style="color:var(--txt2)">${getUserName(r.reporter_id)}</td>
+      <td style="color:var(--txt2)">${timeAgo(r.created_at)}</td>
+      <td>
+        <button class="btn-sm danger" onclick="removeListing('${r.target_id}')">🗑️ Remover</button>
+        <button class="btn-sm" onclick="dismissReport('${r.id}')">✓ Ignorar</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function dismissReport(id) {
+  await sb.from('reports').delete().eq('id', id);
+  await loadReports();
+  renderReports();
+}
+
+// ============================================================
+// PETS TABLE
+// ============================================================
+function renderPets() {
+  const pets = allListings.filter(l => l.type === 'lost_pet');
+  document.getElementById('petsTable').innerHTML = pets.map(l => {
+    const photo = l.photos && l.photos.length > 0
+      ? `<img src="${l.photos[0]}" style="width:50px;height:50px;border-radius:10px;object-fit:cover">`
+      : '🐾';
+    const user = allUsers.find(u => u.id === l.user_id);
+    const phone = user?.phone || l.phone || '-';
+    return `<tr>
+      <td>${photo}</td>
+      <td style="font-weight:600">${l.title}</td>
+      <td style="color:var(--txt2);max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.description || '-'}</td>
+      <td style="color:var(--txt2)">${l.neighborhood || '-'}</td>
+      <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
+      <td>${formatPhone(phone)}</td>
+      <td>
+        <button class="btn-sm" onclick="window.open('https://api.whatsapp.com/send?phone=${String(phone).replace(/\\D/g,'')}','_blank')">💬 WhatsApp</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
