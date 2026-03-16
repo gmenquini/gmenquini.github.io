@@ -11,187 +11,129 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg: #0a0e17;
-  --bg2: #111827;
-  --bg3: #1a2236;
-  --pri: #2DB67D;
-  --pri2: #22956a;
-  --acc: #FF6B6B;
-  --warn: #FFB347;
-  --info: #4ECDC4;
-  --txt: #e8ecf4;
-  --txt2: #8892a8;
-  --brd: #1e293b;
-  --card: #151d2e;
-  --free: #2DB67D;
-  --sale: #FF6B6B;
-  --pet: #E91E63;
-  --wanted: #FF9800;
-  --food: #4CAF50;
-  --loja: #8B5CF6;
-  --pro: #FFD166;
+  --bg:#0a0e17; --bg2:#111827; --bg3:#1a2236; --pri:#2DB67D; --pri2:#22956a;
+  --acc:#FF6B6B; --warn:#FFB347; --info:#4ECDC4; --txt:#e8ecf4; --txt2:#8892a8;
+  --brd:#1e293b; --card:#151d2e;
+  --free:#2DB67D; --sale:#FF6B6B; --pet:#E91E63; --wanted:#FF9800; --food:#4CAF50;
+  --loja:#8B5CF6; --pro:#FFD166;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;}
 
 /* LOGIN */
-.login-overlay {
-  position:fixed; inset:0; background:var(--bg); z-index:9999;
-  display:flex; align-items:center; justify-content:center;
-}
-.login-box {
-  background:var(--bg2); border:1px solid var(--brd); border-radius:20px;
-  padding:48px; width:380px; text-align:center;
-}
-.login-box h1 { font-size:28px; font-weight:800; margin-bottom:6px; }
-.login-box .sub { color:var(--txt2); font-size:14px; margin-bottom:32px; }
-.login-box input {
-  width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--brd);
-  background:var(--bg3); color:var(--txt); font-size:15px; margin-bottom:12px;
-  font-family:inherit; outline:none;
-}
-.login-box input:focus { border-color:var(--pri); }
-.login-box button {
-  width:100%; padding:14px; border-radius:12px; border:none;
-  background:var(--pri); color:#fff; font-size:16px; font-weight:700;
-  cursor:pointer; font-family:inherit;
-}
-.login-box button:hover { background:var(--pri2); }
-.login-box .error { color:var(--acc); font-size:13px; margin-top:8px; }
-.login-box .logo { font-size:48px; margin-bottom:16px; }
+.login-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.login-box{background:var(--bg2);border:1px solid var(--brd);border-radius:20px;padding:48px;width:380px;text-align:center;}
+.login-box h1{font-size:28px;font-weight:800;margin-bottom:6px;}
+.login-box .sub{color:var(--txt2);font-size:14px;margin-bottom:32px;}
+.login-box input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--brd);background:var(--bg3);color:var(--txt);font-size:15px;margin-bottom:12px;font-family:inherit;outline:none;}
+.login-box input:focus{border-color:var(--pri);}
+.login-box button{width:100%;padding:14px;border-radius:12px;border:none;background:var(--pri);color:#fff;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
+.login-box button:hover{background:var(--pri2);}
+.login-box .error{color:var(--acc);font-size:13px;margin-top:8px;}
+.login-box .logo{font-size:48px;margin-bottom:16px;}
 
 /* LAYOUT */
-.app { display:flex; height:100vh; }
-.sidebar {
-  width:260px; background:var(--bg2); border-right:1px solid var(--brd);
-  display:flex; flex-direction:column; flex-shrink:0;
-}
-.sidebar-header { padding:24px 20px 16px; border-bottom:1px solid var(--brd); }
-.sidebar-header h2 { font-size:16px; font-weight:800; color:var(--pri); }
-.sidebar-header .sub { font-size:11px; color:var(--txt2); margin-top:2px; }
-.nav { flex:1; padding:12px 8px; }
-.nav-item {
-  display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px;
-  color:var(--txt2); font-size:14px; font-weight:500; cursor:pointer;
-  transition:all .15s;
-}
-.nav-item:hover { background:var(--bg3); color:var(--txt); }
-.nav-item.active { background:var(--pri); color:#fff; }
-.nav-item .icon { font-size:18px; width:24px; text-align:center; }
-.nav-item .badge {
-  margin-left:auto; background:var(--acc); color:#fff; font-size:10px;
-  font-weight:700; padding:2px 8px; border-radius:10px;
-}
-.sidebar-footer { padding:16px 20px; border-top:1px solid var(--brd); }
-.sidebar-footer .user { font-size:13px; color:var(--txt2); }
-.sidebar-footer button {
-  margin-top:8px; background:transparent; border:1px solid var(--brd);
-  color:var(--txt2); padding:6px 14px; border-radius:8px; cursor:pointer;
-  font-size:12px; font-family:inherit;
-}
-.sidebar-footer button:hover { border-color:var(--acc); color:var(--acc); }
+.app{display:flex;height:100vh;}
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--brd);display:flex;flex-direction:column;flex-shrink:0;z-index:10;}
+.sidebar-header{padding:20px 16px 14px;border-bottom:1px solid var(--brd);}
+.sidebar-header h2{font-size:15px;font-weight:800;color:var(--pri);}
+.sidebar-header .sub{font-size:10px;color:var(--txt2);margin-top:2px;}
+.nav{flex:1;padding:8px 6px;overflow-y:auto;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;color:var(--txt2);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;}
+.nav-item:hover{background:var(--bg3);color:var(--txt);}
+.nav-item.active{background:var(--pri);color:#fff;}
+.nav-item .icon{font-size:16px;width:22px;text-align:center;}
+.nav-item .badge{margin-left:auto;background:var(--acc);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;}
+.sidebar-footer{padding:12px 16px;border-top:1px solid var(--brd);}
+.sidebar-footer .user{font-size:12px;color:var(--txt2);}
+.sidebar-footer button{margin-top:6px;background:transparent;border:1px solid var(--brd);color:var(--txt2);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;font-family:inherit;}
+.sidebar-footer button:hover{border-color:var(--acc);color:var(--acc);}
 
 /* MAIN */
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
-.topbar {
-  display:flex; align-items:center; gap:16px; padding:16px 24px;
-  border-bottom:1px solid var(--brd); background:var(--bg2);
-}
-.topbar h1 { font-size:20px; font-weight:700; }
-.topbar .filters { display:flex; gap:6px; margin-left:auto; }
-.filter-btn {
-  padding:6px 14px; border-radius:8px; border:1px solid var(--brd);
-  background:transparent; color:var(--txt2); font-size:12px; font-weight:600;
-  cursor:pointer; font-family:inherit; transition:all .15s;
-}
-.filter-btn:hover { border-color:var(--pri); color:var(--pri); }
-.filter-btn.active { background:var(--pri); border-color:var(--pri); color:#fff; }
-.content { flex:1; overflow:auto; }
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--brd);background:var(--bg2);flex-wrap:wrap;}
+.topbar h1{font-size:18px;font-weight:700;}
+.topbar .filters{display:flex;gap:4px;flex-wrap:wrap;}
+.filter-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--brd);background:transparent;color:var(--txt2);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.filter-btn:hover{border-color:var(--pri);color:var(--pri);}
+.filter-btn.active{background:var(--pri);border-color:var(--pri);color:#fff;}
+.content{flex:1;overflow:auto;}
 
 /* STATS */
-.stats-grid {
-  display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr));
-  gap:12px; padding:20px 24px;
-}
-.stat-card {
-  background:var(--card); border:1px solid var(--brd); border-radius:14px;
-  padding:16px; position:relative; overflow:hidden;
-}
-.stat-card::after {
-  content:''; position:absolute; top:0; right:0; width:60px; height:60px;
-  border-radius:0 0 0 60px; opacity:.08;
-}
-.stat-card.green::after { background:var(--free); }
-.stat-card.red::after { background:var(--acc); }
-.stat-card.purple::after { background:var(--loja); }
-.stat-card.yellow::after { background:var(--warn); }
-.stat-card.blue::after { background:var(--info); }
-.stat-label { font-size:11px; color:var(--txt2); text-transform:uppercase; letter-spacing:.5px; font-weight:600; }
-.stat-value { font-size:28px; font-weight:800; margin-top:4px; }
-.stat-extra { font-size:11px; color:var(--txt2); margin-top:4px; }
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;padding:16px 20px;}
+.stat-card{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:14px;}
+.stat-label{font-size:10px;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.stat-value{font-size:24px;font-weight:800;margin-top:2px;}
+.stat-extra{font-size:10px;color:var(--txt2);margin-top:2px;}
 
 /* MAP */
-#map { width:100%; height:100%; min-height:400px; }
-.map-container { flex:1; position:relative; }
-.map-legend {
-  position:absolute; bottom:20px; left:20px; z-index:1000;
-  background:var(--bg2); border:1px solid var(--brd); border-radius:12px;
-  padding:12px 16px; display:flex; gap:14px;
-}
-.legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--txt2); }
-.legend-dot { width:10px; height:10px; border-radius:50%; }
+#map{width:100%;height:100%;}
+.map-wrap{flex:1;display:flex;position:relative;}
+.map-sidebar{width:320px;background:var(--bg2);border-left:1px solid var(--brd);display:flex;flex-direction:column;overflow-y:auto;}
+.map-sidebar h3{padding:14px 16px 8px;font-size:13px;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
+.map-stat{display:flex;justify-content:space-between;padding:8px 16px;font-size:13px;}
+.map-stat .label{color:var(--txt2);}
+.map-stat .val{font-weight:700;}
+.map-cat-list{padding:4px 16px 12px;}
+.map-cat-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--brd);font-size:12px;}
+.map-cat-item .name{color:var(--txt2);}
+.map-cat-item .count{font-weight:700;color:var(--pri);}
+.map-search{margin:12px 16px;padding:8px 12px;border-radius:8px;border:1px solid var(--brd);background:var(--bg3);color:var(--txt);font-size:12px;font-family:inherit;outline:none;}
+.map-search:focus{border-color:var(--pri);}
+.map-listing-list{flex:1;overflow-y:auto;padding:0 8px 8px;}
+.map-listing-card{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:10px;margin-bottom:6px;cursor:pointer;transition:all .15s;display:flex;gap:10px;}
+.map-listing-card:hover{border-color:var(--pri);}
+.map-listing-card img{width:50px;height:50px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+.map-listing-card .info{flex:1;min-width:0;}
+.map-listing-card .title{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.map-listing-card .meta{font-size:10px;color:var(--txt2);margin-top:2px;}
+.map-listing-card .price{font-size:11px;font-weight:700;margin-top:2px;}
+.map-fullscreen-btn{position:absolute;top:10px;right:340px;z-index:1000;background:var(--bg2);border:1px solid var(--brd);color:var(--txt);padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;}
+.map-fullscreen-btn:hover{background:var(--pri);color:#fff;border-color:var(--pri);}
+.map-legend{position:absolute;bottom:16px;left:16px;z-index:1000;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:10px 14px;display:flex;gap:12px;}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--txt2);}
+.legend-dot{width:8px;height:8px;border-radius:50%;}
+
+/* MAP FULLSCREEN */
+.map-wrap.fullscreen{position:fixed;inset:0;z-index:100;}
+.map-wrap.fullscreen .map-sidebar{width:360px;}
 
 /* TABLE */
-.table-container { padding:0 24px 24px; }
-table { width:100%; border-collapse:collapse; }
-th {
-  text-align:left; padding:10px 14px; font-size:11px; text-transform:uppercase;
-  letter-spacing:.5px; color:var(--txt2); border-bottom:1px solid var(--brd);
-  font-weight:600; position:sticky; top:0; background:var(--bg);
-}
-td { padding:10px 14px; font-size:13px; border-bottom:1px solid var(--brd); }
-tr:hover { background:var(--bg3); }
-.badge {
-  display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px;
-  font-weight:700; text-transform:uppercase;
-}
-.badge-free { background:#2db67d22; color:var(--free); }
-.badge-sell { background:#ff6b6b22; color:var(--acc); }
-.badge-donate { background:#2db67d22; color:var(--free); }
-.badge-lost_pet { background:#e91e6322; color:var(--pet); }
-.badge-wanted { background:#ff980022; color:var(--wanted); }
-.badge-food { background:#4caf5022; color:var(--food); }
-.badge-loja { background:#8b5cf622; color:var(--loja); }
-.badge-pro { background:#ffd16622; color:var(--pro); }
-.badge-active { background:#2db67d22; color:var(--free); }
-.badge-blocked { background:#ff6b6b22; color:var(--acc); }
-.btn-sm {
-  padding:4px 10px; border-radius:6px; border:1px solid var(--brd);
-  background:transparent; color:var(--txt2); font-size:11px; cursor:pointer;
-  font-family:inherit; transition:all .15s;
-}
-.btn-sm:hover { border-color:var(--pri); color:var(--pri); }
-.btn-sm.danger:hover { border-color:var(--acc); color:var(--acc); }
+.table-container{padding:0 20px 20px;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:8px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--txt2);border-bottom:1px solid var(--brd);font-weight:600;position:sticky;top:0;background:var(--bg);}
+td{padding:8px 12px;font-size:12px;border-bottom:1px solid var(--brd);}
+tr:hover{background:var(--bg3);}
+.badge{display:inline-block;padding:2px 7px;border-radius:5px;font-size:9px;font-weight:700;text-transform:uppercase;}
+.badge-free{background:#2db67d22;color:var(--free);}
+.badge-sell{background:#ff6b6b22;color:var(--acc);}
+.badge-donate{background:#2db67d22;color:var(--free);}
+.badge-lost_pet{background:#e91e6322;color:var(--pet);}
+.badge-wanted{background:#ff980022;color:var(--wanted);}
+.badge-food{background:#4caf5022;color:var(--food);}
+.badge-loja{background:#8b5cf622;color:var(--loja);}
+.badge-pro{background:#ffd16622;color:var(--pro);}
+.badge-active{background:#2db67d22;color:var(--free);}
+.badge-blocked,.badge-removed{background:#ff6b6b22;color:var(--acc);}
+.btn-sm{padding:3px 8px;border-radius:5px;border:1px solid var(--brd);background:transparent;color:var(--txt2);font-size:10px;cursor:pointer;font-family:inherit;transition:all .15s;margin-right:2px;}
+.btn-sm:hover{border-color:var(--pri);color:var(--pri);}
+.btn-sm.danger:hover{border-color:var(--acc);color:var(--acc);}
+.search-bar{padding:5px 12px;border-radius:6px;border:1px solid var(--brd);background:var(--bg3);color:var(--txt);font-size:12px;width:200px;font-family:inherit;outline:none;}
+.search-bar:focus{border-color:var(--pri);}
 
-/* SEARCH */
-.search-bar {
-  padding:6px 14px; border-radius:8px; border:1px solid var(--brd);
-  background:var(--bg3); color:var(--txt); font-size:13px; width:220px;
-  font-family:inherit; outline:none;
-}
-.search-bar:focus { border-color:var(--pri); }
+/* CHART BAR */
+.chart-bars{display:flex;align-items:flex-end;gap:4px;height:80px;padding:8px 16px 4px;}
+.chart-bar{flex:1;background:var(--pri);border-radius:3px 3px 0 0;min-width:20px;position:relative;transition:height .3s;}
+.chart-bar:hover{opacity:.8;}
+.chart-label{text-align:center;font-size:9px;color:var(--txt2);padding:2px 0;}
+.chart-labels{display:flex;gap:4px;padding:0 16px;}
 
-/* LOADING */
-.loading { display:flex; align-items:center; justify-content:center; height:200px; color:var(--txt2); }
-.spinner { width:24px; height:24px; border:3px solid var(--brd); border-top-color:var(--pri); border-radius:50%; animation:spin .6s linear infinite; margin-right:10px; }
-@keyframes spin { to { transform:rotate(360deg); } }
-
-/* RESPONSIVE */
-@media(max-width:768px) {
-  .sidebar { width:60px; }
-  .sidebar-header h2, .sidebar-header .sub, .nav-item span, .nav-item .badge, .sidebar-footer .user { display:none; }
-  .nav-item { justify-content:center; padding:12px; }
-  .stats-grid { grid-template-columns:1fr 1fr; }
+@media(max-width:900px){
+  .sidebar{width:54px;}
+  .sidebar-header h2,.sidebar-header .sub,.nav-item span,.nav-item .badge,.sidebar-footer .user{display:none;}
+  .nav-item{justify-content:center;padding:10px;}
+  .map-sidebar{width:260px;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -212,19 +154,18 @@ tr:hover { background:var(--bg3); }
 
 <!-- APP -->
 <div class="app" id="app" style="display:none">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
       <h2>🏘️ Vizinho Admin</h2>
       <p class="sub">Central de Controle</p>
     </div>
-    <div class="nav">
-      <div class="nav-item active" onclick="showPage('dashboard')"><span class="icon">📊</span><span>Dashboard</span></div>
-      <div class="nav-item" onclick="showPage('map')"><span class="icon">🗺️</span><span>Mapa</span></div>
-      <div class="nav-item" onclick="showPage('listings')"><span class="icon">📦</span><span>Anúncios</span></div>
-      <div class="nav-item" onclick="showPage('users')"><span class="icon">👥</span><span>Usuários</span></div>
-      <div class="nav-item" onclick="showPage('reports')"><span class="icon">⚠️</span><span>Denúncias</span><span class="badge" id="reportsBadge">0</span></div>
-      <div class="nav-item" onclick="showPage('pets')"><span class="icon">🐾</span><span>Pets</span></div>
+    <div class="nav" id="navItems">
+      <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span><span>Dashboard</span></div>
+      <div class="nav-item" data-page="map"><span class="icon">🗺️</span><span>Mapa</span></div>
+      <div class="nav-item" data-page="listings"><span class="icon">📦</span><span>Anúncios</span></div>
+      <div class="nav-item" data-page="users"><span class="icon">👥</span><span>Usuários</span></div>
+      <div class="nav-item" data-page="reports"><span class="icon">⚠️</span><span>Denúncias</span><span class="badge" id="reportsBadge">0</span></div>
+      <div class="nav-item" data-page="pets"><span class="icon">🐾</span><span>Pets</span></div>
     </div>
     <div class="sidebar-footer">
       <p class="user" id="adminEmail"></p>
@@ -232,19 +173,27 @@ tr:hover { background:var(--bg3); }
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main">
     <!-- DASHBOARD -->
     <div id="page-dashboard" class="page">
-      <div class="topbar"><h1>📊 Dashboard</h1></div>
+      <div class="topbar"><h1>📊 Dashboard</h1><button class="filter-btn" onclick="loadAll()" style="margin-left:auto">🔄 Atualizar</button></div>
       <div class="content">
         <div class="stats-grid" id="statsGrid"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 20px 16px;">
+          <div style="background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:14px;">
+            <h3 style="font-size:12px;color:var(--txt2);margin-bottom:8px">📈 Anúncios (7 dias)</h3>
+            <div class="chart-bars" id="dailyChart"></div>
+            <div class="chart-labels" id="dailyLabels"></div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:14px;">
+            <h3 style="font-size:12px;color:var(--txt2);margin-bottom:8px">📂 Top Categorias</h3>
+            <div id="topCats"></div>
+          </div>
+        </div>
         <div class="table-container">
-          <h3 style="margin-bottom:12px; font-size:15px; color:var(--txt2)">📝 Últimos anúncios</h3>
-          <table>
-            <thead><tr><th>Título</th><th>Tipo</th><th>Preço</th><th>Bairro</th><th>Data</th><th>Usuário</th></tr></thead>
-            <tbody id="recentListings"></tbody>
-          </table>
+          <h3 style="margin-bottom:10px;font-size:13px;color:var(--txt2)">📝 Últimos anúncios</h3>
+          <table><thead><tr><th>Foto</th><th>Título</th><th>Tipo</th><th>Preço</th><th>Bairro</th><th>Data</th><th>Usuário</th></tr></thead>
+          <tbody id="recentListings"></tbody></table>
         </div>
       </div>
     </div>
@@ -252,7 +201,7 @@ tr:hover { background:var(--bg3); }
     <!-- MAP -->
     <div id="page-map" class="page" style="display:none">
       <div class="topbar">
-        <h1>🗺️ Mapa</h1>
+        <h1>🗺️ Mapa Completo</h1>
         <div class="filters" id="mapFilters">
           <button class="filter-btn active" data-filter="todos">Todos</button>
           <button class="filter-btn" data-filter="gratis">🎁 Grátis</button>
@@ -260,17 +209,41 @@ tr:hover { background:var(--bg3); }
           <button class="filter-btn" data-filter="perdidos">🐾 Pets</button>
           <button class="filter-btn" data-filter="procuro">🔎 Procuro</button>
           <button class="filter-btn" data-filter="food">🍽️ Comida</button>
+          <button class="filter-btn" data-filter="donate">🎁 Doação</button>
         </div>
-        <span id="mapCount" style="font-size:12px; color:var(--txt2)"></span>
+        <span id="mapCount" style="font-size:11px;color:var(--txt2);margin-left:auto"></span>
       </div>
-      <div class="map-container">
-        <div id="map"></div>
-        <div class="map-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--sale)"></div>Venda</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--free)"></div>Doação</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--wanted)"></div>Procuro</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--pet)"></div>Pet</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--food)"></div>Comida</div>
+      <div class="map-wrap" id="mapWrap">
+        <div style="flex:1;position:relative;">
+          <div id="map"></div>
+          <button class="map-fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ Tela cheia</button>
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--sale)"></div>Venda</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--free)"></div>Doação</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--wanted)"></div>Procuro</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--pet)"></div>Pet</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--food)"></div>Comida</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--loja)"></div>Loja</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--pro)"></div>Pro</div>
+          </div>
+        </div>
+        <div class="map-sidebar" id="mapSidebar">
+          <!-- Stats -->
+          <h3>📊 Estatísticas</h3>
+          <div id="mapStats"></div>
+          <!-- Top Bairros -->
+          <h3>📍 Top Bairros</h3>
+          <div class="map-cat-list" id="mapHoods"></div>
+          <!-- Top Categorias -->
+          <h3>📂 Categorias</h3>
+          <div class="map-cat-list" id="mapCats"></div>
+          <!-- Planos -->
+          <h3>💎 Planos</h3>
+          <div id="mapPlans" style="padding:4px 16px 12px;"></div>
+          <!-- Lista de anúncios -->
+          <h3>📋 Anúncios no mapa</h3>
+          <input class="map-search" placeholder="🔍 Buscar no mapa..." oninput="filterMapList(this.value)">
+          <div class="map-listing-list" id="mapListingList"></div>
         </div>
       </div>
     </div>
@@ -279,460 +252,347 @@ tr:hover { background:var(--bg3); }
     <div id="page-listings" class="page" style="display:none">
       <div class="topbar">
         <h1>📦 Anúncios</h1>
-        <input class="search-bar" placeholder="🔍 Buscar anúncio..." oninput="filterListings(this.value)">
+        <input class="search-bar" placeholder="🔍 Buscar..." oninput="filterListings(this.value)">
         <div class="filters" id="listingFilters">
           <button class="filter-btn active" data-filter="todos">Todos</button>
           <button class="filter-btn" data-filter="gratis">Grátis</button>
           <button class="filter-btn" data-filter="venda">Venda</button>
           <button class="filter-btn" data-filter="perdidos">Pets</button>
           <button class="filter-btn" data-filter="procuro">Procuro</button>
+          <button class="filter-btn" data-filter="blocked">Bloqueados</button>
         </div>
       </div>
-      <div class="content">
-        <div class="table-container">
-          <table>
-            <thead><tr><th>Foto</th><th>Título</th><th>Tipo</th><th>Preço</th><th>Categoria</th><th>Bairro</th><th>Data</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody id="listingsTable"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="content"><div class="table-container">
+        <table><thead><tr><th>Foto</th><th>Título</th><th>Tipo</th><th>Preço</th><th>Categoria</th><th>Bairro</th><th>Data</th><th>Status</th><th>Usuário</th><th>Ações</th></tr></thead>
+        <tbody id="listingsTable"></tbody></table>
+      </div></div>
     </div>
 
     <!-- USERS -->
     <div id="page-users" class="page" style="display:none">
       <div class="topbar">
         <h1>👥 Usuários</h1>
-        <input class="search-bar" placeholder="🔍 Buscar usuário..." oninput="filterUsers(this.value)">
+        <input class="search-bar" placeholder="🔍 Buscar..." oninput="filterUsers(this.value)">
       </div>
-      <div class="content">
-        <div class="table-container">
-          <table>
-            <thead><tr><th>Nome</th><th>Phone</th><th>Plano</th><th>Anúncios</th><th>Bairro</th><th>Cadastro</th><th>Status</th><th>Ações</th></tr></thead>
-            <tbody id="usersTable"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="content"><div class="table-container">
+        <table><thead><tr><th>Nome</th><th>Phone</th><th>Plano</th><th>Anúncios</th><th>Bairro</th><th>Cadastro</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="usersTable"></tbody></table>
+      </div></div>
     </div>
 
     <!-- REPORTS -->
     <div id="page-reports" class="page" style="display:none">
       <div class="topbar"><h1>⚠️ Denúncias</h1></div>
-      <div class="content">
-        <div class="table-container">
-          <table>
-            <thead><tr><th>Anúncio</th><th>Motivo</th><th>Reportado por</th><th>Data</th><th>Ações</th></tr></thead>
-            <tbody id="reportsTable"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="content"><div class="table-container">
+        <table><thead><tr><th>Anúncio</th><th>Motivo</th><th>Reportado por</th><th>Data</th><th>Ações</th></tr></thead>
+        <tbody id="reportsTable"></tbody></table>
+      </div></div>
     </div>
 
     <!-- PETS -->
     <div id="page-pets" class="page" style="display:none">
       <div class="topbar"><h1>🐾 Pets Perdidos</h1></div>
-      <div class="content">
-        <div class="table-container">
-          <table>
-            <thead><tr><th>Foto</th><th>Título</th><th>Descrição</th><th>Bairro</th><th>Data</th><th>Contato</th><th>Ações</th></tr></thead>
-            <tbody id="petsTable"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="content"><div class="table-container">
+        <table><thead><tr><th>Foto</th><th>Título</th><th>Descrição</th><th>Bairro</th><th>Data</th><th>Contato</th><th>Ações</th></tr></thead>
+        <tbody id="petsTable"></tbody></table>
+      </div></div>
     </div>
   </div>
 </div>
 
 <script>
-// ============================================================
-// SUPABASE
-// ============================================================
-const SUPABASE_URL = 'https://qdhunieocngxaujmgumn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkaHVuaWVvY25neGF1am1ndW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NzQzNzMsImV4cCI6MjA4NzM1MDM3M30.9pE4kkyC22VBljy1IDIKBVYZKWQYtGzqsRUK1FM5JLY';
-const ADMIN_EMAILS = ['gmenquini@gmail.com', 'fithyp@gmail.com'];
+const SUPABASE_URL='https://qdhunieocngxaujmgumn.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFkaHVuaWVvY25neGF1am1ndW1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NzQzNzMsImV4cCI6MjA4NzM1MDM3M30.9pE4kkyC22VBljy1IDIKBVYZKWQYtGzqsRUK1FM5JLY';
+const ADMIN_EMAILS=['gmenquini@gmail.com','fithyp@gmail.com','applereview@vizinhovendedoa.com'];
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+let allListings=[],allUsers=[],allReports=[],map=null,markers=[],currentFilter='todos',mapSearchQuery='';
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-let allListings = [];
-let allUsers = [];
-let allReports = [];
-let map = null;
-let markers = [];
-let currentFilter = 'todos';
-
-// ============================================================
 // AUTH
-// ============================================================
-async function doLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  const errEl = document.getElementById('loginError');
-  errEl.textContent = '';
-
-  if (!email || !pass) { errEl.textContent = 'Preencha email e senha'; return; }
-
-  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) { errEl.textContent = error.message; return; }
-
-  if (!ADMIN_EMAILS.includes(email.toLowerCase())) {
-    errEl.textContent = 'Acesso negado — apenas admins';
-    await sb.auth.signOut();
-    return;
-  }
-
-  document.getElementById('loginOverlay').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('adminEmail').textContent = email;
+async function doLogin(){
+  const email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value,err=document.getElementById('loginError');
+  err.textContent='';
+  if(!email||!pass){err.textContent='Preencha email e senha';return;}
+  const{data,error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){err.textContent=error.message;return;}
+  if(!ADMIN_EMAILS.includes(email.toLowerCase())){err.textContent='Acesso negado';await sb.auth.signOut();return;}
+  startApp(email);
+}
+async function doLogout(){await sb.auth.signOut();location.reload();}
+function startApp(email){
+  document.getElementById('loginOverlay').style.display='none';
+  document.getElementById('app').style.display='flex';
+  document.getElementById('adminEmail').textContent=email;
   loadAll();
 }
-
-async function doLogout() {
-  await sb.auth.signOut();
-  location.reload();
-}
-
-// Check existing session
-(async () => {
-  const { data: { session } } = await sb.auth.getSession();
-  if (session && ADMIN_EMAILS.includes(session.user.email)) {
-    document.getElementById('loginOverlay').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    document.getElementById('adminEmail').textContent = session.user.email;
-    loadAll();
-  }
+(async()=>{
+  const{data:{session}}=await sb.auth.getSession();
+  if(session&&ADMIN_EMAILS.includes(session.user.email))startApp(session.user.email);
 })();
+document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
-// Enter key on login
-document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+// NAV
+document.querySelectorAll('.nav-item').forEach(n=>{
+  n.onclick=()=>{
+    document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+    document.getElementById('page-'+n.dataset.page).style.display='';
+    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+    n.classList.add('active');
+    if(n.dataset.page==='map')setTimeout(()=>{if(map)map.invalidateSize();},150);
+  };
+});
 
-// ============================================================
-// DATA LOADING
-// ============================================================
-async function loadAll() {
-  await Promise.all([loadListings(), loadUsers(), loadReports()]);
-  renderDashboard();
-  renderMap();
-  renderListings();
-  renderUsers();
-  renderReports();
-  renderPets();
+// DATA
+async function loadAll(){
+  await Promise.all([loadListings(),loadUsers(),loadReports()]);
+  renderDashboard();renderMap();renderListings();renderUsers();renderReports();renderPets();
 }
+async function loadListings(){const{data}=await sb.from('listings').select('*').order('created_at',{ascending:false});allListings=data||[];}
+async function loadUsers(){const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:false});allUsers=data||[];}
+async function loadReports(){const{data}=await sb.from('reports').select('*').order('created_at',{ascending:false});allReports=data||[];document.getElementById('reportsBadge').textContent=(data||[]).length;}
 
-async function loadListings() {
-  const { data } = await sb.from('listings').select('*').order('created_at', { ascending: false });
-  allListings = data || [];
-}
-
-async function loadUsers() {
-  const { data } = await sb.from('profiles').select('*').order('created_at', { ascending: false });
-  allUsers = data || [];
-}
-
-async function loadReports() {
-  const { data } = await sb.from('reports').select('*').order('created_at', { ascending: false });
-  allReports = data || [];
-  document.getElementById('reportsBadge').textContent = (data || []).length;
-}
-
-// ============================================================
 // HELPERS
-// ============================================================
-function timeAgo(d) {
-  if (!d) return '-';
-  const s = (Date.now() - new Date(d)) / 1000;
-  if (s < 60) return 'agora';
-  if (s < 3600) return Math.floor(s/60) + 'min';
-  if (s < 86400) return Math.floor(s/3600) + 'h';
-  return Math.floor(s/86400) + 'd';
-}
+function timeAgo(d){if(!d)return'-';const s=(Date.now()-new Date(d))/1000;if(s<60)return'agora';if(s<3600)return Math.floor(s/60)+'min';if(s<86400)return Math.floor(s/3600)+'h';return Math.floor(s/86400)+'d';}
+function formatPhone(r){if(!r)return'-';const d=String(r).replace(/\D/g,'');if(d.length===13)return'+'+d.slice(0,2)+' ('+d.slice(2,4)+') '+d.slice(4,9)+'-'+d.slice(9);if(d.length===11)return'('+d.slice(0,2)+') '+d.slice(2,7)+'-'+d.slice(7);return d;}
+function typeColor(t){return{sell:'var(--sale)',donate:'var(--free)',lost_pet:'var(--pet)',wanted:'var(--wanted)',food:'var(--food)'}[t]||'var(--txt2)';}
+function typeName(t){return{sell:'Venda',donate:'Doação',lost_pet:'Pet Perdido',wanted:'Procuro',food:'Comida'}[t]||t;}
+function planBadge(p){if(p==='loja')return'<span class="badge badge-loja">LOJA</span>';if(p==='pro')return'<span class="badge badge-pro">PRO</span>';return'<span class="badge badge-free">FREE</span>';}
+function getUserName(id){const u=allUsers.find(u=>u.id===id);return u?(u.name||formatPhone(u.phone)||'Anônimo'):'Desconhecido';}
+function getUserPlan(id){const u=allUsers.find(u=>u.id===id);return u?.plan||'free';}
+function photoThumb(l){return l.photos&&l.photos.length?`<img src="${l.photos[0]}" style="width:40px;height:40px;border-radius:6px;object-fit:cover">`:'<div style="width:40px;height:40px;border-radius:6px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px">📦</div>';}
 
-function formatPhone(raw) {
-  if (!raw) return '-';
-  const d = String(raw).replace(/\D/g, '');
-  if (d.length === 13) return '+' + d.slice(0,2) + ' (' + d.slice(2,4) + ') ' + d.slice(4,9) + '-' + d.slice(9);
-  if (d.length === 11) return '(' + d.slice(0,2) + ') ' + d.slice(2,7) + '-' + d.slice(7);
-  return d;
+// FULLSCREEN MAP
+function toggleFullscreen(){
+  const w=document.getElementById('mapWrap'),b=document.getElementById('fullscreenBtn');
+  w.classList.toggle('fullscreen');
+  b.textContent=w.classList.contains('fullscreen')?'✕ Sair':'⛶ Tela cheia';
+  setTimeout(()=>map&&map.invalidateSize(),200);
 }
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const w=document.getElementById('mapWrap');if(w.classList.contains('fullscreen'))toggleFullscreen();}});
 
-function typeColor(type) {
-  const colors = { sell:'var(--sale)', donate:'var(--free)', lost_pet:'var(--pet)', wanted:'var(--wanted)', food:'var(--food)' };
-  return colors[type] || 'var(--txt2)';
-}
-
-function typeName(type) {
-  const names = { sell:'Venda', donate:'Doação', lost_pet:'Pet Perdido', wanted:'Procuro', food:'Comida' };
-  return names[type] || type;
-}
-
-function planBadge(plan) {
-  if (plan === 'loja') return '<span class="badge badge-loja">LOJA</span>';
-  if (plan === 'pro') return '<span class="badge badge-pro">PRO</span>';
-  return '<span class="badge badge-free">FREE</span>';
-}
-
-function getUserName(userId) {
-  const u = allUsers.find(u => u.id === userId);
-  return u ? (u.name || u.phone || 'Anônimo') : 'Desconhecido';
-}
-
-// ============================================================
-// NAVIGATION
-// ============================================================
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-  document.getElementById('page-' + page).style.display = '';
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-  if (page === 'map') setTimeout(() => { if (map) map.invalidateSize(); }, 100);
-}
-
-// ============================================================
 // DASHBOARD
-// ============================================================
-function renderDashboard() {
-  const active = allListings.filter(l => l.status === 'active');
-  const sells = active.filter(l => l.type === 'sell');
-  const donates = active.filter(l => l.type === 'donate');
-  const pets = active.filter(l => l.type === 'lost_pet');
-  const proUsers = allUsers.filter(u => u.plan === 'pro').length;
-  const lojaUsers = allUsers.filter(u => u.plan === 'loja').length;
+function renderDashboard(){
+  const active=allListings.filter(l=>l.status==='active');
+  const sells=active.filter(l=>l.type==='sell'),donates=active.filter(l=>l.type==='donate');
+  const pets=active.filter(l=>l.type==='lost_pet'),foods=active.filter(l=>l.type==='food');
+  const proUsers=allUsers.filter(u=>u.plan==='pro').length,lojaUsers=allUsers.filter(u=>u.plan==='loja').length;
+  const revenue=(proUsers*4.90+lojaUsers*29.90).toFixed(2);
+  const blocked=allListings.filter(l=>l.status==='blocked'||l.status==='removed').length;
 
-  // Revenue estimate
-  const revenue = (proUsers * 4.90 + lojaUsers * 29.90).toFixed(2);
-
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-card green"><div class="stat-label">Anúncios ativos</div><div class="stat-value">${active.length}</div><div class="stat-extra">${allListings.length} total</div></div>
-    <div class="stat-card blue"><div class="stat-label">Usuários</div><div class="stat-value">${allUsers.length}</div><div class="stat-extra">${proUsers} Pro · ${lojaUsers} Loja</div></div>
-    <div class="stat-card red"><div class="stat-label">Vendas</div><div class="stat-value">${sells.length}</div><div class="stat-extra">${donates.length} doações</div></div>
-    <div class="stat-card purple"><div class="stat-label">Receita mensal</div><div class="stat-value">R$ ${revenue}</div><div class="stat-extra">${proUsers + lojaUsers} assinantes</div></div>
-    <div class="stat-card yellow"><div class="stat-label">Denúncias</div><div class="stat-value">${allReports.length}</div><div class="stat-extra">pendentes</div></div>
-    <div class="stat-card blue"><div class="stat-label">Pets perdidos</div><div class="stat-value">${pets.length}</div><div class="stat-extra">ativos</div></div>
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Anúncios ativos</div><div class="stat-value" style="color:var(--pri)">${active.length}</div><div class="stat-extra">${allListings.length} total · ${blocked} bloqueados</div></div>
+    <div class="stat-card"><div class="stat-label">Usuários</div><div class="stat-value" style="color:var(--info)">${allUsers.length}</div><div class="stat-extra">${proUsers} Pro · ${lojaUsers} Loja</div></div>
+    <div class="stat-card"><div class="stat-label">Vendas / Doações</div><div class="stat-value" style="color:var(--acc)">${sells.length} / ${donates.length}</div><div class="stat-extra">${foods.length} comida · ${pets.length} pets</div></div>
+    <div class="stat-card"><div class="stat-label">Receita mensal</div><div class="stat-value" style="color:var(--loja)">R$ ${revenue}</div><div class="stat-extra">${proUsers+lojaUsers} assinantes</div></div>
+    <div class="stat-card"><div class="stat-label">Denúncias</div><div class="stat-value" style="color:var(--warn)">${allReports.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Pets perdidos</div><div class="stat-value" style="color:var(--pet)">${pets.length}</div></div>
   `;
 
-  // Recent listings
-  const recent = allListings.slice(0, 10);
-  document.getElementById('recentListings').innerHTML = recent.map(l => `
-    <tr>
-      <td style="font-weight:600">${l.title}</td>
-      <td><span class="badge badge-${l.type}">${typeName(l.type)}</span></td>
-      <td>${l.price > 0 ? 'R$ ' + l.price : 'Grátis'}</td>
-      <td style="color:var(--txt2)">${l.neighborhood || '-'}</td>
-      <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
-      <td style="color:var(--txt2)">${getUserName(l.user_id)}</td>
-    </tr>
-  `).join('');
+  // Daily chart (7 days)
+  const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.toISOString().slice(0,10));}
+  const dayCounts=days.map(d=>allListings.filter(l=>l.created_at&&l.created_at.slice(0,10)===d).length);
+  const maxCount=Math.max(...dayCounts,1);
+  document.getElementById('dailyChart').innerHTML=dayCounts.map((c,i)=>`<div class="chart-bar" style="height:${Math.max(c/maxCount*100,4)}%;background:${i===6?'var(--pri)':'var(--bg3)'}" title="${c} anúncios"></div>`).join('');
+  document.getElementById('dailyLabels').innerHTML=days.map(d=>`<div class="chart-label">${d.slice(8)}</div>`).join('');
+
+  // Top categories
+  const catCount={};active.forEach(l=>{catCount[l.category]=(catCount[l.category]||0)+1;});
+  const topCats=Object.entries(catCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  document.getElementById('topCats').innerHTML=topCats.map(([cat,count])=>`<div class="map-cat-item"><span class="name">${cat}</span><span class="count">${count}</span></div>`).join('');
+
+  // Recent
+  document.getElementById('recentListings').innerHTML=allListings.slice(0,10).map(l=>`<tr>
+    <td>${photoThumb(l)}</td>
+    <td style="font-weight:600">${l.title}</td>
+    <td><span class="badge badge-${l.type}">${typeName(l.type)}</span></td>
+    <td>${l.price>0?'R$ '+l.price:'Grátis'}</td>
+    <td style="color:var(--txt2)">${l.neighborhood||'-'}</td>
+    <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
+    <td style="color:var(--txt2)">${getUserName(l.user_id)}</td>
+  </tr>`).join('');
 }
 
-// ============================================================
 // MAP
-// ============================================================
-function renderMap() {
-  if (!map) {
-    map = L.map('map', { zoomControl: true }).setView([-23.56, -46.66], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-  }
-
-  // Filter buttons
-  document.querySelectorAll('#mapFilters .filter-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('#mapFilters .filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentFilter = btn.dataset.filter;
-      updateMapMarkers();
-    };
-  });
-
-  updateMapMarkers();
+function renderMap(){
+  if(!map){map=L.map('map',{zoomControl:true}).setView([-23.56,-46.66],12);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);}
+  document.querySelectorAll('#mapFilters .filter-btn').forEach(btn=>{btn.onclick=()=>{document.querySelectorAll('#mapFilters .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;updateMap();};});
+  updateMap();
 }
 
-function updateMapMarkers() {
-  markers.forEach(m => map.removeLayer(m));
-  markers = [];
+function getFilteredMapItems(){
+  let items=allListings.filter(l=>l.status==='active'&&l.latitude&&l.longitude);
+  if(currentFilter==='gratis')items=items.filter(l=>l.price===0&&l.type!=='wanted'&&l.type!=='lost_pet');
+  else if(currentFilter==='venda')items=items.filter(l=>l.price>0&&l.type!=='wanted');
+  else if(currentFilter==='perdidos')items=items.filter(l=>l.type==='lost_pet');
+  else if(currentFilter==='procuro')items=items.filter(l=>l.type==='wanted');
+  else if(currentFilter==='food')items=items.filter(l=>l.type==='food');
+  else if(currentFilter==='donate')items=items.filter(l=>l.type==='donate');
+  return items;
+}
 
-  let items = allListings.filter(l => l.status === 'active' && l.latitude && l.longitude);
+function updateMap(){
+  markers.forEach(m=>map.removeLayer(m));markers=[];
+  const items=getFilteredMapItems();
+  document.getElementById('mapCount').textContent=items.length+' anúncio'+(items.length!==1?'s':'');
 
-  if (currentFilter === 'gratis') items = items.filter(l => l.price === 0 && l.type !== 'wanted' && l.type !== 'lost_pet');
-  else if (currentFilter === 'venda') items = items.filter(l => l.price > 0 && l.type !== 'wanted');
-  else if (currentFilter === 'perdidos') items = items.filter(l => l.type === 'lost_pet');
-  else if (currentFilter === 'procuro') items = items.filter(l => l.type === 'wanted');
-  else if (currentFilter === 'food') items = items.filter(l => l.type === 'food');
-
-  document.getElementById('mapCount').textContent = items.length + ' anúncio' + (items.length !== 1 ? 's' : '');
-
-  items.forEach(l => {
-    const color = l.type === 'lost_pet' ? '#E91E63' : l.type === 'wanted' ? '#FF9800' : l.type === 'food' ? '#4CAF50' : l.price === 0 ? '#2DB67D' : '#FF6B6B';
-    const icon = L.divIcon({
-      className: '',
-      html: `<div style="background:${color};width:14px;height:14px;border-radius:50%;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)"></div>`,
-      iconSize: [14, 14],
-      iconAnchor: [7, 7],
-    });
-
-    const photo = l.photos && l.photos.length > 0 ? `<img src="${l.photos[0]}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px">` : '';
-    const price = l.price > 0 ? 'R$ ' + l.price : l.type === 'lost_pet' ? '🐾 Pet Perdido' : 'Grátis';
-
-    const popup = `
-      <div style="font-family:DM Sans,sans-serif;min-width:160px;">
-        ${photo}
-        <strong style="font-size:13px">${l.title}</strong><br>
-        <span style="color:${color};font-weight:700;font-size:12px">${price}</span><br>
-        <span style="color:#888;font-size:11px">📍 ${l.neighborhood || 'Próximo'} · ${timeAgo(l.created_at)}</span><br>
-        <span style="color:#888;font-size:11px">👤 ${getUserName(l.user_id)}</span>
-      </div>
-    `;
-
-    const m = L.marker([Number(l.latitude), Number(l.longitude)], { icon }).addTo(map).bindPopup(popup);
+  items.forEach(l=>{
+    const plan=getUserPlan(l.user_id);
+    const color=l.type==='lost_pet'?'#E91E63':l.type==='wanted'?'#FF9800':l.type==='food'?'#4CAF50':l.price===0?'#2DB67D':'#FF6B6B';
+    const border=plan==='loja'?'3px solid #8B5CF6':plan==='pro'?'3px solid #FFD166':'2px solid #fff';
+    const size=plan==='loja'?18:plan==='pro'?16:12;
+    const icon=L.divIcon({className:'',html:`<div style="background:${color};width:${size}px;height:${size}px;border-radius:50%;border:${border};box-shadow:0 2px 8px rgba(0,0,0,.4)"></div>`,iconSize:[size,size],iconAnchor:[size/2,size/2]});
+    const photo=l.photos&&l.photos.length?`<img src="${l.photos[0]}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px">`:'';
+    const price=l.price>0?'R$ '+l.price:l.type==='lost_pet'?'🐾 Pet Perdido':'Grátis';
+    const planTag=plan==='loja'?' 🏪':'';
+    const popup=`<div style="font-family:DM Sans,sans-serif;min-width:160px">${photo}<strong style="font-size:13px">${l.title}${planTag}</strong><br><span style="color:${color};font-weight:700;font-size:12px">${price}</span><br><span style="color:#888;font-size:11px">📍 ${l.neighborhood||'Próximo'} · ${timeAgo(l.created_at)}</span><br><span style="color:#888;font-size:11px">👤 ${getUserName(l.user_id)}</span></div>`;
+    const m=L.marker([Number(l.latitude),Number(l.longitude)],{icon}).addTo(map).bindPopup(popup);
+    m._listingId=l.id;
     markers.push(m);
   });
 
-  // Fit bounds
-  if (markers.length > 0) {
-    const group = L.featureGroup(markers);
-    map.fitBounds(group.getBounds().pad(0.1));
-  }
+  if(markers.length>0)map.fitBounds(L.featureGroup(markers).getBounds().pad(0.1));
+  updateMapSidebar(items);
+  updateMapListingList(items);
 }
 
-// ============================================================
-// LISTINGS TABLE
-// ============================================================
-let listingSearch = '';
-let listingFilter = 'todos';
+function updateMapSidebar(items){
+  const proUsers=allUsers.filter(u=>u.plan==='pro').length,lojaUsers=allUsers.filter(u=>u.plan==='loja').length;
+  const revenue=(proUsers*4.90+lojaUsers*29.90).toFixed(2);
 
-function renderListings() {
-  document.querySelectorAll('#listingFilters .filter-btn').forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll('#listingFilters .filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      listingFilter = btn.dataset.filter;
-      renderListingsTable();
-    };
-  });
+  document.getElementById('mapStats').innerHTML=`
+    <div class="map-stat"><span class="label">No mapa</span><span class="val" style="color:var(--pri)">${items.length}</span></div>
+    <div class="map-stat"><span class="label">Total ativos</span><span class="val">${allListings.filter(l=>l.status==='active').length}</span></div>
+    <div class="map-stat"><span class="label">Usuários</span><span class="val" style="color:var(--info)">${allUsers.length}</span></div>
+    <div class="map-stat"><span class="label">Receita</span><span class="val" style="color:var(--loja)">R$ ${revenue}</span></div>
+    <div class="map-stat"><span class="label">Denúncias</span><span class="val" style="color:var(--warn)">${allReports.length}</span></div>
+  `;
+
+  // Top hoods
+  const hoodCount={};items.forEach(l=>{const h=l.neighborhood||'Sem bairro';hoodCount[h]=(hoodCount[h]||0)+1;});
+  const topHoods=Object.entries(hoodCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  document.getElementById('mapHoods').innerHTML=topHoods.map(([h,c])=>`<div class="map-cat-item"><span class="name">${h}</span><span class="count">${c}</span></div>`).join('');
+
+  // Cats
+  const catCount={};items.forEach(l=>{catCount[l.category]=(catCount[l.category]||0)+1;});
+  const topCats=Object.entries(catCount).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('mapCats').innerHTML=topCats.map(([c,n])=>`<div class="map-cat-item"><span class="name">${c}</span><span class="count">${n}</span></div>`).join('');
+
+  // Plans
+  document.getElementById('mapPlans').innerHTML=`
+    <div class="map-cat-item"><span class="name">🏪 Loja</span><span class="count" style="color:var(--loja)">${lojaUsers}</span></div>
+    <div class="map-cat-item"><span class="name">⭐ Pro</span><span class="count" style="color:var(--pro)">${proUsers}</span></div>
+    <div class="map-cat-item"><span class="name">Free</span><span class="count">${allUsers.length-proUsers-lojaUsers}</span></div>
+  `;
+}
+
+function updateMapListingList(items){
+  let filtered=items;
+  if(mapSearchQuery)filtered=filtered.filter(l=>l.title.toLowerCase().includes(mapSearchQuery));
+  document.getElementById('mapListingList').innerHTML=filtered.slice(0,50).map(l=>{
+    const photo=l.photos&&l.photos.length?`<img src="${l.photos[0]}">`:'';
+    const price=l.price>0?'R$ '+l.price:l.type==='lost_pet'?'🐾 Pet':'Grátis';
+    const color=typeColor(l.type);
+    return`<div class="map-listing-card" onclick="flyTo('${l.id}')">
+      ${photo?photo:'<div style="width:50px;height:50px;border-radius:8px;background:var(--bg);display:flex;align-items:center;justify-content:center">📦</div>'}
+      <div class="info"><div class="title">${l.title}</div><div class="meta">📍 ${l.neighborhood||'Próximo'} · ${timeAgo(l.created_at)}</div><div class="price" style="color:${color}">${price}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function filterMapList(val){mapSearchQuery=val.toLowerCase();updateMapListingList(getFilteredMapItems());}
+
+function flyTo(id){
+  const l=allListings.find(x=>x.id===id);
+  if(l&&l.latitude)map.flyTo([Number(l.latitude),Number(l.longitude)],16);
+  const m=markers.find(x=>x._listingId===id);
+  if(m)setTimeout(()=>m.openPopup(),500);
+}
+
+// LISTINGS
+let listingSearch='',listingFilter='todos';
+function renderListings(){
+  document.querySelectorAll('#listingFilters .filter-btn').forEach(btn=>{btn.onclick=()=>{document.querySelectorAll('#listingFilters .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');listingFilter=btn.dataset.filter;renderListingsTable();};});
   renderListingsTable();
 }
-
-function filterListings(val) { listingSearch = val.toLowerCase(); renderListingsTable(); }
-
-function renderListingsTable() {
-  let items = allListings;
-  if (listingFilter === 'gratis') items = items.filter(l => l.price === 0 && l.type !== 'wanted' && l.type !== 'lost_pet');
-  else if (listingFilter === 'venda') items = items.filter(l => l.price > 0);
-  else if (listingFilter === 'perdidos') items = items.filter(l => l.type === 'lost_pet');
-  else if (listingFilter === 'procuro') items = items.filter(l => l.type === 'wanted');
-  if (listingSearch) items = items.filter(l => l.title.toLowerCase().includes(listingSearch) || (l.description||'').toLowerCase().includes(listingSearch));
-
-  document.getElementById('listingsTable').innerHTML = items.map(l => {
-    const photo = l.photos && l.photos.length > 0
-      ? `<img src="${l.photos[0]}" style="width:40px;height:40px;border-radius:8px;object-fit:cover">`
-      : '<div style="width:40px;height:40px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center">📦</div>';
-    return `<tr>
-      <td>${photo}</td>
-      <td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.title}</td>
-      <td><span class="badge badge-${l.type}">${typeName(l.type)}</span></td>
-      <td>${l.price > 0 ? 'R$ ' + l.price : '-'}</td>
-      <td style="color:var(--txt2)">${l.category || '-'}</td>
-      <td style="color:var(--txt2)">${l.neighborhood || '-'}</td>
-      <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
-      <td><span class="badge badge-${l.status}">${l.status}</span></td>
-      <td>
-        <button class="btn-sm danger" onclick="removeListing('${l.id}')">🗑️</button>
-      </td>
-    </tr>`;
-  }).join('');
+function filterListings(val){listingSearch=val.toLowerCase();renderListingsTable();}
+function renderListingsTable(){
+  let items=allListings;
+  if(listingFilter==='gratis')items=items.filter(l=>l.price===0&&l.type!=='wanted'&&l.type!=='lost_pet');
+  else if(listingFilter==='venda')items=items.filter(l=>l.price>0);
+  else if(listingFilter==='perdidos')items=items.filter(l=>l.type==='lost_pet');
+  else if(listingFilter==='procuro')items=items.filter(l=>l.type==='wanted');
+  else if(listingFilter==='blocked')items=items.filter(l=>l.status==='blocked'||l.status==='removed');
+  if(listingSearch)items=items.filter(l=>l.title.toLowerCase().includes(listingSearch)||(l.description||'').toLowerCase().includes(listingSearch));
+  document.getElementById('listingsTable').innerHTML=items.map(l=>`<tr>
+    <td>${photoThumb(l)}</td>
+    <td style="font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.title}</td>
+    <td><span class="badge badge-${l.type}">${typeName(l.type)}</span></td>
+    <td>${l.price>0?'R$ '+l.price:'-'}</td>
+    <td style="color:var(--txt2)">${l.category||'-'}</td>
+    <td style="color:var(--txt2)">${l.neighborhood||'-'}</td>
+    <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
+    <td><span class="badge badge-${l.status}">${l.status}</span></td>
+    <td style="color:var(--txt2);font-size:11px">${getUserName(l.user_id)}</td>
+    <td><button class="btn-sm danger" onclick="removeListing('${l.id}')">🗑️</button></td>
+  </tr>`).join('');
 }
+async function removeListing(id){if(!confirm('Remover este anúncio?'))return;await sb.from('listings').update({status:'blocked'}).eq('id',id);await loadListings();renderListings();renderDashboard();renderMap();}
 
-async function removeListing(id) {
-  if (!confirm('Remover este anúncio?')) return;
-  await sb.from('listings').update({ status: 'blocked' }).eq('id', id);
-  await loadListings();
-  renderListings();
-  renderDashboard();
-  renderMap();
-}
-
-// ============================================================
-// USERS TABLE
-// ============================================================
-let userSearch = '';
-function filterUsers(val) { userSearch = val.toLowerCase(); renderUsersTable(); }
-
-function renderUsers() { renderUsersTable(); }
-
-function renderUsersTable() {
-  let users = allUsers;
-  if (userSearch) users = users.filter(u => (u.name||'').toLowerCase().includes(userSearch) || (u.phone||'').includes(userSearch));
-
-  document.getElementById('usersTable').innerHTML = users.map(u => {
-    const adCount = allListings.filter(l => l.user_id === u.id && l.status === 'active').length;
-    return `<tr>
-      <td style="font-weight:600">${u.name || '<span style="color:var(--txt2)">Sem nome</span>'}</td>
+// USERS
+let userSearch='';
+function filterUsers(val){userSearch=val.toLowerCase();renderUsersTable();}
+function renderUsers(){renderUsersTable();}
+function renderUsersTable(){
+  let users=allUsers;
+  if(userSearch)users=users.filter(u=>(u.name||'').toLowerCase().includes(userSearch)||(u.phone||'').includes(userSearch));
+  document.getElementById('usersTable').innerHTML=users.map(u=>{
+    const adCount=allListings.filter(l=>l.user_id===u.id&&l.status==='active').length;
+    return`<tr>
+      <td style="font-weight:600">${u.name||'<span style="color:var(--txt2)">Sem nome</span>'}</td>
       <td>${formatPhone(u.phone)}</td>
-      <td>${planBadge(u.plan || 'free')}</td>
+      <td>${planBadge(u.plan||'free')}</td>
       <td>${adCount}</td>
-      <td style="color:var(--txt2)">${u.neighborhood || '-'}</td>
+      <td style="color:var(--txt2)">${u.neighborhood||'-'}</td>
       <td style="color:var(--txt2)">${timeAgo(u.created_at)}</td>
-      <td><span class="badge badge-${u.status || 'active'}">${u.status || 'active'}</span></td>
+      <td><span class="badge badge-${u.status||'active'}">${u.status||'active'}</span></td>
       <td>
-        <button class="btn-sm" onclick="changePlan('${u.id}', 'pro')">⭐ Pro</button>
-        <button class="btn-sm" onclick="changePlan('${u.id}', 'loja')">🏪 Loja</button>
-        <button class="btn-sm" onclick="changePlan('${u.id}', 'free')">Free</button>
+        <button class="btn-sm" onclick="changePlan('${u.id}','pro')">⭐</button>
+        <button class="btn-sm" onclick="changePlan('${u.id}','loja')">🏪</button>
+        <button class="btn-sm" onclick="changePlan('${u.id}','free')">Free</button>
       </td>
     </tr>`;
   }).join('');
 }
+async function changePlan(userId,plan){await sb.from('profiles').update({plan}).eq('id',userId);await loadUsers();renderUsers();renderDashboard();}
 
-async function changePlan(userId, plan) {
-  await sb.from('profiles').update({ plan }).eq('id', userId);
-  await loadUsers();
-  renderUsers();
-  renderDashboard();
-}
-
-// ============================================================
-// REPORTS TABLE
-// ============================================================
-function renderReports() {
-  document.getElementById('reportsTable').innerHTML = allReports.map(r => {
-    const listing = allListings.find(l => l.id === r.target_id);
-    return `<tr>
-      <td style="font-weight:600">${listing ? listing.title : r.target_id.slice(0,8) + '...'}</td>
+// REPORTS
+function renderReports(){
+  document.getElementById('reportsTable').innerHTML=allReports.map(r=>{
+    const listing=allListings.find(l=>l.id===r.target_id);
+    return`<tr>
+      <td style="font-weight:600">${listing?listing.title:r.target_id.slice(0,8)+'...'}</td>
       <td><span class="badge">${r.reason}</span></td>
       <td style="color:var(--txt2)">${getUserName(r.reporter_id)}</td>
       <td style="color:var(--txt2)">${timeAgo(r.created_at)}</td>
-      <td>
-        <button class="btn-sm danger" onclick="removeListing('${r.target_id}')">🗑️ Remover</button>
-        <button class="btn-sm" onclick="dismissReport('${r.id}')">✓ Ignorar</button>
-      </td>
+      <td><button class="btn-sm danger" onclick="removeListing('${r.target_id}')">🗑️</button><button class="btn-sm" onclick="dismissReport('${r.id}')">✓</button></td>
     </tr>`;
   }).join('');
 }
+async function dismissReport(id){await sb.from('reports').delete().eq('id',id);await loadReports();renderReports();}
 
-async function dismissReport(id) {
-  await sb.from('reports').delete().eq('id', id);
-  await loadReports();
-  renderReports();
-}
-
-// ============================================================
-// PETS TABLE
-// ============================================================
-function renderPets() {
-  const pets = allListings.filter(l => l.type === 'lost_pet');
-  document.getElementById('petsTable').innerHTML = pets.map(l => {
-    const photo = l.photos && l.photos.length > 0
-      ? `<img src="${l.photos[0]}" style="width:50px;height:50px;border-radius:10px;object-fit:cover">`
-      : '🐾';
-    const user = allUsers.find(u => u.id === l.user_id);
-    const phone = user?.phone || l.phone || '-';
-    return `<tr>
+// PETS
+function renderPets(){
+  const pets=allListings.filter(l=>l.type==='lost_pet');
+  document.getElementById('petsTable').innerHTML=pets.map(l=>{
+    const photo=l.photos&&l.photos.length?`<img src="${l.photos[0]}" style="width:50px;height:50px;border-radius:8px;object-fit:cover">`:'🐾';
+    const user=allUsers.find(u=>u.id===l.user_id);const phone=user?.phone||l.phone||'-';
+    return`<tr>
       <td>${photo}</td>
       <td style="font-weight:600">${l.title}</td>
-      <td style="color:var(--txt2);max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.description || '-'}</td>
-      <td style="color:var(--txt2)">${l.neighborhood || '-'}</td>
+      <td style="color:var(--txt2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.description||'-'}</td>
+      <td style="color:var(--txt2)">${l.neighborhood||'-'}</td>
       <td style="color:var(--txt2)">${timeAgo(l.created_at)}</td>
       <td>${formatPhone(phone)}</td>
-      <td>
-        <button class="btn-sm" onclick="window.open('https://api.whatsapp.com/send?phone=${String(phone).replace(/\\D/g,'')}','_blank')">💬 WhatsApp</button>
-      </td>
+      <td><button class="btn-sm" onclick="window.open('https://api.whatsapp.com/send?phone=${String(phone).replace(/\D/g,'')}','_blank')">💬</button></td>
     </tr>`;
   }).join('');
 }
