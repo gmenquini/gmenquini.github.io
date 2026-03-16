@@ -354,7 +354,9 @@ function uMap(){
       if(mStyle==='cards'){
         const ph=l.photos?.length?`<img src="${l.photos[0]}">`:'';
         const pr=l.price>0?'R$'+l.price:l.type==='lost_pet'?'🐾':'Grátis';
-        icon=L.divIcon({className:'',html:`<div class="mk" style="border-color:${color}">${ph||'<div style="height:45px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px">📦</div>'}<div class="mi"><div class="mt2">${l.title}</div><div class="mp" style="color:${color}">${pr}</div></div></div>`,iconSize:[95,70],iconAnchor:[47,70]});
+        const uPh=(UA.find(x=>x.id===l.user_id))?.phone||l.phone||'';
+        const phIc=uPh?`<a href="https://api.whatsapp.com/send?phone=${String(uPh).replace(/\D/g,'')}" target="_blank" style="color:#25D366;text-decoration:none;font-size:9px" onclick="event.stopPropagation()">💬</a>`:'<span style="color:#F44;font-size:7px">⚠️</span>';
+        icon=L.divIcon({className:'',html:`<div class="mk" style="border-color:${color}">${ph||'<div style="height:45px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px">📦</div>'}<div class="mi"><div class="mt2">${l.title}</div><div class="mp" style="color:${color}">${pr} ${phIc}</div></div></div>`,iconSize:[105,75],iconAnchor:[52,75]});
       } else {
         const brd=plan==='loja'?'3px solid #8B5CF6':plan==='pro'?'3px solid #FFD166':'2px solid #fff';
         const sz=plan==='loja'?18:plan==='pro'?16:12;
