@@ -205,10 +205,6 @@ tr:hover{background:var(--bg3);}
 <div class="topbar"><h1>🐾 Pets Perdidos</h1></div>
 <div class="content"><div class="tc"><table><thead><tr><th>Foto</th><th>Título</th><th>Descrição</th><th>Bairro</th><th>Data</th><th>Contato</th><th>Ações</th></tr></thead><tbody id="PT"></tbody></table></div></div></div>
 
-<!-- USER MODAL -->
-<div id="userModal" class="modal-bg" style="display:none" onclick="if(event.target===this)this.style.display='none'"><div class="modal" id="userModalContent"></div></div>
-</div></div>
-
 <div id="page-config" class="page" style="display:none">
 <div class="topbar"><h1>⚙️ Configurações</h1></div>
 <div class="content" style="padding:16px;max-width:600px">
@@ -266,7 +262,7 @@ $('LP').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 function $(id){return document.getElementById(id);}
 
 // NAV
-document.querySelectorAll('.ni').forEach(n=>{n.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.style.display='none');const pg=$('page-'+n.dataset.page);pg.style.display=['dashboard','map','stats','config'].includes(n.dataset.page)?'flex':'block';document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(n.dataset.page==='map')setTimeout(()=>map&&map.invalidateSize(),200);if(n.dataset.page==='stats')rStats();if(n.dataset.page==='regions')rRegions();if(n.dataset.page==='config')loadCfgSupport();};});
+document.querySelectorAll('.ni').forEach(n=>{n.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.style.display='none');const pg=$('page-'+n.dataset.page);pg.style.display=['dashboard','map','stats'].includes(n.dataset.page)?'flex':'';document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(n.dataset.page==='map')setTimeout(()=>map&&map.invalidateSize(),200);if(n.dataset.page==='stats')rStats();if(n.dataset.page==='regions')rRegions();if(n.dataset.page==='config')loadCfgSupport();};});
 
 // DATA
 async function loadAll(){await Promise.all([lL(),lU(),lR()]);rDash();rMap();rList();rUsers();rRep();rPets();populateHoodFilter();}
@@ -506,3 +502,7 @@ async function saveCfgSupport() {
 </script>
 </body>
 </html>
+<!-- USER MODAL -->
+<div id="userModal" class="modal-bg" style="display:none" onclick="if(event.target===this)this.style.display='none'"><div class="modal" id="userModalContent"></div></div>
+</div></div>
+
