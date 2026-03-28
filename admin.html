@@ -266,7 +266,7 @@ $('LP').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 function $(id){return document.getElementById(id);}
 
 // NAV
-document.querySelectorAll('.ni').forEach(n=>{n.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.style.display='none');const pg=$('page-'+n.dataset.page);pg.style.display=['dashboard','map','stats'].includes(n.dataset.page)?'flex':'';document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(n.dataset.page==='map')setTimeout(()=>map&&map.invalidateSize(),200);if(n.dataset.page==='stats')rStats();if(n.dataset.page==='regions')rRegions();if(n.dataset.page==='config')loadCfgSupport();};});
+document.querySelectorAll('.ni').forEach(n=>{n.onclick=()=>{document.querySelectorAll('.page').forEach(p=>p.style.display='none');const pg=$('page-'+n.dataset.page);pg.style.display=['dashboard','map','stats','config'].includes(n.dataset.page)?'flex':'block';document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));n.classList.add('active');if(n.dataset.page==='map')setTimeout(()=>map&&map.invalidateSize(),200);if(n.dataset.page==='stats')rStats();if(n.dataset.page==='regions')rRegions();if(n.dataset.page==='config')loadCfgSupport();};});
 
 // DATA
 async function loadAll(){await Promise.all([lL(),lU(),lR()]);rDash();rMap();rList();rUsers();rRep();rPets();populateHoodFilter();}
